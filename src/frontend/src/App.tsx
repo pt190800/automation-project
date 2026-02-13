@@ -20,7 +20,7 @@ export default function App() {
             <Link to="/" style={{ color: 'white', textDecoration: 'none', fontSize: '20px', fontWeight: 'bold' }}>
               Automation Project
             </Link>
-            <span style={{ fontSize: '14px', color: '#adb5bd' }}>Phase 3: Search → Results</span>
+            <span style={{ fontSize: '14px', color: '#adb5bd' }}>Phase 4: Cart + Checkout + Screenshot</span>
           </div>
         </header>
 

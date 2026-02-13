@@ -38,7 +38,18 @@ export async function addToCart(requestId: string, productId: string): Promise<{
 }
 
 export async function checkout(request: PurchaseRequest): Promise<PurchaseResult> {
-  throw new Error('Not implemented - Phase 4');
+  const response = await fetch(`${API_BASE}/api/purchase`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Checkout failed');
+  }
+
+  return response.json();
 }
 
 export async function getStatus(requestId: string): Promise<{ trace: RequestTrace }> {
@@ -53,5 +64,11 @@ export async function getStatus(requestId: string): Promise<{ trace: RequestTrac
 }
 
 export async function getScreenshot(requestId: string): Promise<Blob> {
-  throw new Error('Not implemented - Phase 4');
+  const response = await fetch(`${API_BASE}/api/screenshots/${requestId}-checkout.png`);
+
+  if (!response.ok) {
+    throw new Error('Failed to load screenshot');
+  }
+
+  return response.blob();
 }

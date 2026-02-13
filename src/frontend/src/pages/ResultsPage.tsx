@@ -17,7 +17,9 @@ export default function ResultsPage() {
 
     getProducts(requestId)
       .then((result) => {
-        setProducts(result.products);
+        // Sort products by price (cheapest first)
+        const sortedProducts = result.products.sort((a, b) => a.price - b.price);
+        setProducts(sortedProducts);
         setLoading(false);
       })
       .catch((err) => {
@@ -27,7 +29,7 @@ export default function ResultsPage() {
   }, [requestId]);
 
   const handleBuy = (productId: string) => {
-    alert(`Phase 4: Buy functionality not yet implemented for product ${productId}`);
+    window.location.href = `/checkout/${requestId}/${productId}`;
   };
 
   if (loading) {
@@ -54,9 +56,14 @@ export default function ResultsPage() {
   return (
     <div style={{ maxWidth: '1200px', margin: '50px auto', padding: '20px' }}>
       <h1 style={{ marginBottom: '10px' }}>Search Results</h1>
-      <p style={{ color: '#666', marginBottom: '30px' }}>
-        Request ID: {requestId} | Found {products.length} product(s)
-      </p>
+      <div style={{ marginBottom: '30px' }}>
+        <p style={{ color: '#666', marginBottom: '10px' }}>
+          Request ID: {requestId} | Found {products.length} product(s) | Sorted by price (cheapest first)
+        </p>
+        <a href={`/status/${requestId}`} style={{ color: '#007bff', fontSize: '14px' }}>
+          📊 View Automation Trace
+        </a>
+      </div>
 
       {products.length === 0 ? (
         <div style={{ padding: '50px', textAlign: 'center', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>

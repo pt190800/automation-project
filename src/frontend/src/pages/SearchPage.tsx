@@ -80,9 +80,9 @@ export default function SearchPage() {
       </form>
 
       <div style={{ marginTop: '30px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
-        <h3 style={{ marginTop: 0 }}>Phase 3: Search → Scrape → Results</h3>
+        <h3 style={{ marginTop: 0 }}>Phase 4: Complete E-commerce Flow</h3>
         <p style={{ fontSize: '14px', color: '#666' }}>
-          This will launch Playwright, scrape SauceDemo products, and display results.
+          Search → Scrape products → Select cheapest → Add to cart → Checkout → Order confirmation with screenshot proof
         </p>
       </div>
     </div>
