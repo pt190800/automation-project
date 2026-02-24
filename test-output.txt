@@ -1,0 +1,15 @@
+
+> automation-project@1.0.0 test:unit
+> jest
+
+PASS tests/unit/selection.test.ts
+PASS tests/unit/cart.test.ts
+PASS tests/unit/product.test.ts
+
+Test Suites: 3 passed, 3 total
+Tests:       19 passed, 19 total
+Snapshots:   0 total
+Time:        2.261 s
+Ran all test suites.
+---
+Date: יום ג 24 פבר 2026 16:47:28
