@@ -1,8 +1,7 @@
 // Service: Purchase business logic
 
-import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
-import { Cart, CartItem } from '../../shared/types/Cart';
+import { Cart } from '../../shared/types/Cart';
 import { Order } from '../../shared/types/Order';
 import { PurchaseRequest, PurchaseResult } from '../../shared/types/Services';
 import { BrowserManager } from '../automation/BrowserManager';
@@ -127,6 +126,7 @@ export class PurchaseService implements IPurchaseService {
       };
     } catch (error) {
       await this.browserManager.close();
+      traceStoreInstance.setFailed(requestId);
 
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 

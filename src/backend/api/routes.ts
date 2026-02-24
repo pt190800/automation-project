@@ -61,7 +61,7 @@ router.get('/status/:requestId', (req: Request, res: Response) => {
   res.json({ trace });
 });
 
-router.get('/health', (req: Request, res: Response) => {
+router.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok' });
 });
 
@@ -115,10 +115,22 @@ router.get('/orders/:requestId', (req: Request, res: Response) => {
 
 router.get('/screenshots/:filename', (req: Request, res: Response) => {
   const { filename } = req.params;
-  const screenshotDir = process.env.SCREENSHOT_DIR || './artifacts/screenshots';
-  const filePath = path.join(screenshotDir, filename);
 
-  res.sendFile(path.resolve(filePath), (err) => {
+  // Prevent path traversal: only allow simple filenames with no directory separators
+  if (!filename || /[/\\]/.test(filename) || filename.includes('..')) {
+    return res.status(400).json({ error: 'Invalid filename' });
+  }
+
+  const screenshotDir = process.env.SCREENSHOT_DIR || './artifacts/screenshots';
+  const resolvedDir = path.resolve(screenshotDir);
+  const filePath = path.resolve(path.join(resolvedDir, filename));
+
+  // Double-check the resolved path is still inside the screenshots directory
+  if (!filePath.startsWith(resolvedDir + path.sep) && filePath !== resolvedDir) {
+    return res.status(400).json({ error: 'Invalid filename' });
+  }
+
+  res.sendFile(filePath, (err) => {
     if (err) {
       res.status(404).json({
         error: 'Screenshot not found',

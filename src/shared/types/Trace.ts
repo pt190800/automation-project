@@ -22,4 +22,9 @@ export interface RequestTrace {
   requestId: string;
   steps: TraceStep[];
   totalDuration?: number;
+  status: 'running' | 'success' | 'failed';
+  query?: string;
+  startTime: number;
+  endTime?: number;
+  duration?: number;
 }

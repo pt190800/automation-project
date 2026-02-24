@@ -2,6 +2,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { SearchRequest, SearchResult } from '../../shared/types/Services';
+import { Product } from '../../shared/types/Product';
 import { BrowserManager } from '../automation/BrowserManager';
 import { SauceDemoAdapter } from '../automation/SauceDemoAdapter';
 import { loggerInstance } from '../observability/Logger';
@@ -18,6 +19,7 @@ export class SearchService {
 
     try {
       storeInstance.saveRequest(requestId, request.query);
+      traceStoreInstance.initTrace(requestId, request.query);
 
       loggerInstance.info({
         requestId,
@@ -42,7 +44,7 @@ export class SearchService {
         await this.adapter.login(page, username, password);
       });
 
-      let allProducts;
+      let allProducts: Product[] = [];
       await this.stepWithTrace(requestId, 'scrape', async () => {
         allProducts = await this.adapter.scrapeProducts(page!);
         loggerInstance.info({
@@ -52,7 +54,7 @@ export class SearchService {
         });
       });
 
-      let filteredProducts;
+      let filteredProducts: Product[] = [];
       await this.stepWithTrace(requestId, 'filter', async () => {
         const query = request.query.toLowerCase();
         filteredProducts = allProducts!.filter((p) =>
@@ -98,6 +100,7 @@ export class SearchService {
       };
     } catch (error) {
       await this.browserManager.close();
+      traceStoreInstance.setFailed(requestId);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       loggerInstance.error({
         requestId,

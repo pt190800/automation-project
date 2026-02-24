@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getStatus } from '../api/client';
 import type { RequestTrace } from '../../../shared/types/Trace';
+import TraceTimeline from '../components/TraceTimeline';
 
 export default function StatusPage() {
   const { requestId } = useParams<{ requestId: string }>();
@@ -53,19 +54,6 @@ export default function StatusPage() {
     );
   }
 
-  const getStepIcon = (status: string) => {
-    switch (status) {
-      case 'success':
-        return '✅';
-      case 'failed':
-        return '❌';
-      case 'running':
-        return '⏳';
-      default:
-        return '⏺';
-    }
-  };
-
   const getStepColor = (status: string) => {
     switch (status) {
       case 'success':
@@ -100,95 +88,7 @@ export default function StatusPage() {
 
       <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px' }}>
         <h3 style={{ marginBottom: '20px' }}>Execution Steps</h3>
-
-        {trace.steps.length === 0 ? (
-          <p style={{ color: '#666' }}>No steps recorded</p>
-        ) : (
-          <div style={{ position: 'relative' }}>
-            {/* Timeline line */}
-            <div
-              style={{
-                position: 'absolute',
-                left: '20px',
-                top: '10px',
-                bottom: '10px',
-                width: '2px',
-                backgroundColor: '#e0e0e0',
-              }}
-            />
-
-            {trace.steps.map((step, index) => (
-              <div
-                key={index}
-                style={{
-                  position: 'relative',
-                  paddingLeft: '50px',
-                  paddingBottom: '20px',
-                }}
-              >
-                {/* Step icon */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    left: '8px',
-                    top: '0',
-                    width: '24px',
-                    height: '24px',
-                    borderRadius: '50%',
-                    backgroundColor: 'white',
-                    border: `2px solid ${getStepColor(step.status)}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '14px',
-                  }}
-                >
-                  {getStepIcon(step.status)}
-                </div>
-
-                {/* Step content */}
-                <div
-                  style={{
-                    backgroundColor: '#f8f9fa',
-                    padding: '15px',
-                    borderRadius: '4px',
-                    border: `1px solid ${getStepColor(step.status)}33`,
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                    <h4 style={{ margin: 0, color: getStepColor(step.status) }}>
-                      {step.name}
-                    </h4>
-                    {step.duration && (
-                      <span style={{ fontSize: '12px', color: '#666' }}>
-                        {(step.duration / 1000).toFixed(2)}s
-                      </span>
-                    )}
-                  </div>
-
-                  <p style={{ fontSize: '14px', color: '#666', margin: '5px 0' }}>
-                    Started: {new Date(step.timestamp).toLocaleTimeString()}
-                  </p>
-
-                  {step.error && (
-                    <div
-                      style={{
-                        marginTop: '10px',
-                        padding: '10px',
-                        backgroundColor: '#f8d7da',
-                        color: '#721c24',
-                        borderRadius: '4px',
-                        fontSize: '14px',
-                      }}
-                    >
-                      <strong>Error:</strong> {step.error}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <TraceTimeline steps={trace.steps} />
       </div>
 
       <div style={{ marginTop: '20px' }}>
